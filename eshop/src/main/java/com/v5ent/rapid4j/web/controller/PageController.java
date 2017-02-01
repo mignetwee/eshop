@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
 
     /**
-     * 登录页
+     * 进入登录页
      */
     @RequestMapping("/login")
     public String login() {

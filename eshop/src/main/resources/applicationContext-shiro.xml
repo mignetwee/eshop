@@ -20,6 +20,8 @@
                 /fonts/** = anon
                 /images/** = anon
                 /js/** = anon
+                <!-- 登录首页访问 -->
+                /rest/index = anon
                 <!-- 登录允许访问 -->
                 /rest/auth/login = anon
                 <!-- 测试 http authc basic访问 -->

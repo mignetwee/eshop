@@ -47,7 +47,7 @@ Website: http://www.keenthemes.com/
 <body>
 	<div class="container text-center">
 		<div class="logo-404">
-			<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
+			<a href="#"><img src="images/home/logo.png" alt="" /></a>
 		</div>
 		<div class="content-404">
 			<img src="images/404/404.png" class="img-responsive" alt="" />
