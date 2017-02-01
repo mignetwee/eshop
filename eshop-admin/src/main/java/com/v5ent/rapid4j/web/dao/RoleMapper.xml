@@ -13,27 +13,27 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from public.tsys_role
+    from tsys_role
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from public.tsys_role
+    from tsys_role
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from public.tsys_role
+    delete from tsys_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.v5ent.rapid4j.web.model.Role" >
-    insert into public.tsys_role (id, role_name, role_sign, 
+    insert into tsys_role (id, role_name, role_sign, 
       description)
     values (#{id,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, #{roleSign,jdbcType=VARCHAR}, 
       #{description,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.v5ent.rapid4j.web.model.Role" >
-    insert into public.tsys_role
+    insert into tsys_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -64,7 +64,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.v5ent.rapid4j.web.model.Role" >
-    update public.tsys_role
+    update tsys_role
     <set >
       <if test="roleName != null" >
         role_name = #{roleName,jdbcType=VARCHAR},
@@ -79,7 +79,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.v5ent.rapid4j.web.model.Role" >
-    update public.tsys_role
+    update tsys_role
     set role_name = #{roleName,jdbcType=VARCHAR},
       role_sign = #{roleSign,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR}

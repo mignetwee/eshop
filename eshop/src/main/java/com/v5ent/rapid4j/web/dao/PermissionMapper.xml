@@ -13,13 +13,13 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from public.tsys_permission
+    from tsys_permission
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from public.tsys_permission
+    from tsys_permission
     where permission_name = #{permissionName}
   </select>
   
@@ -27,21 +27,21 @@
   <select id="selectList" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from public.tsys_permission
+    from tsys_permission
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from public.tsys_permission
+    delete from tsys_permission
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.v5ent.rapid4j.web.model.Permission" >
-    insert into public.tsys_permission (id, permission_name, permission_sign, 
+    insert into tsys_permission (id, permission_name, permission_sign, 
       description)
     values (#{id,jdbcType=INTEGER}, #{permissionName,jdbcType=VARCHAR}, #{permissionSign,jdbcType=VARCHAR}, 
       #{description,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.v5ent.rapid4j.web.model.Permission" >
-    insert into public.tsys_permission
+    insert into tsys_permission
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -72,7 +72,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.v5ent.rapid4j.web.model.Permission" >
-    update public.tsys_permission
+    update tsys_permission
     <set >
       <if test="permissionName != null" >
         permission_name = #{permissionName,jdbcType=VARCHAR},
@@ -87,7 +87,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.v5ent.rapid4j.web.model.Permission" >
-    update public.tsys_permission
+    update tsys_permission
     set permission_name = #{permissionName,jdbcType=VARCHAR},
       permission_sign = #{permissionSign,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR}

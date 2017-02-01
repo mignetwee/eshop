@@ -15,15 +15,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from public.tsys_user
+    from tsys_user
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from public.tsys_user
+    delete from tsys_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.v5ent.rapid4j.web.model.User" >
-    insert into public.tsys_user (id, username, password, 
+    insert into tsys_user (id, username, password, 
       state, create_time, description
       )
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, 
@@ -31,7 +31,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.v5ent.rapid4j.web.model.User" >
-    insert into public.tsys_user
+    insert into tsys_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -74,7 +74,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.v5ent.rapid4j.web.model.User" >
-    update public.tsys_user
+    update tsys_user
     <set >
       <if test="username != null" >
         username = #{username,jdbcType=VARCHAR},
@@ -95,7 +95,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.v5ent.rapid4j.web.model.User" >
-    update public.tsys_user
+    update tsys_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=CHAR},
       state = #{state,jdbcType=VARCHAR},
@@ -123,7 +123,7 @@
     <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String" >
 	    select 
 	    <include refid="Base_Column_List" />
-	    from public.tsys_user
+	    from tsys_user
 	    where username = #{username,jdbcType=VARCHAR}
   </select>
 </mapper>
