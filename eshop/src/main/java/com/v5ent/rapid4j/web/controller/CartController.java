@@ -21,7 +21,7 @@ public class CartController {
      * @return
      */
     @RequestMapping("")
-    public String index(HttpServletRequest request) {
+    public String cart(HttpServletRequest request) {
         return "cart";
     }
     
