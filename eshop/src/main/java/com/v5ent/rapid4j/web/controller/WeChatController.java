@@ -20,7 +20,7 @@ public class WeChatController {
      * @param request
      * @return
      */
-    @RequestMapping("")
+    @RequestMapping("/check")
     public String check(HttpServletRequest request) {
         return "wx-check";
     }

@@ -17,7 +17,9 @@ public class WxUtils {
      * @throws NoSuchAlgorithmException 
      */  
     public static boolean checkSingature(String signature,String...paraStr) throws NoSuchAlgorithmException {  
-          
+          if(signature==null){
+        	  return false;
+          }
         // 按字典顺序排序  
         Arrays.sort(paraStr);  
         // 字符串拼接  
