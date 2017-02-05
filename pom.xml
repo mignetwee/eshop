@@ -424,6 +424,7 @@
 	</build>
 	<modules>
 		<module>eshop-framework</module>
+		<module>eshop-generator</module>
 		<module>eshop-admin</module>
 		<module>eshop</module>
 	</modules>
