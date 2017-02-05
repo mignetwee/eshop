@@ -32,4 +32,14 @@ public interface PermissionService extends GenericService<Permission, Integer> {
 
 	List<Permission> selectByName(String permissionName);
 
+	/**
+	 * 更新角色权限
+	 * @param roleid
+	 * @param permissions
+	 * @return
+	 */
+	boolean updateRolePermissions(String roleid, String[] permissions);
+
+	List<Permission> selectListAll();
+
 }

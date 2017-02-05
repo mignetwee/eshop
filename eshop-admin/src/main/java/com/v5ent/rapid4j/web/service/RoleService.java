@@ -30,4 +30,6 @@ public interface RoleService extends GenericService<Role, Integer> {
 	DataTableReturn selectByDatatables(DataTable dataTable);
 
 	boolean updateUserRoles(String id,String[] roles);
+
+	List<Role> selectListAll();
 }

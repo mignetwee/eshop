@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,4 +51,26 @@ public class PermissionServiceImpl extends GenericServiceImpl<Permission, Intege
 		return permissionMapper.selectByName(permissionName);
 	}
 	
+    @Override
+	public List<Permission> selectListAll() {
+		return permissionMapper.selectListAll();
+	}
+
+	@Override
+	public boolean updateRolePermissions(String roleId,String[] permissions) {
+		permissionMapper.deleteRolePermissionsByRoleid(Integer.parseInt(roleId));
+		for(String permissionId:permissions){
+			if(!StringUtils.isBlank(permissionId)){
+				permissionMapper.insertRolePermission(Integer.parseInt(roleId),Integer.parseInt(permissionId));
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public int delete(Integer id) {
+		//删除角色与权限表中该权限
+		permissionMapper.deleteRolePermissionsByPermissionId(id);
+		return permissionMapper.deleteByPrimaryKey(id);
+	}
 }

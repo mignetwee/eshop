@@ -2,6 +2,8 @@ package com.v5ent.rapid4j.web.model;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 public class Role implements Serializable{
     /**
 	 * serialVersionUID
@@ -10,8 +12,10 @@ public class Role implements Serializable{
 
 	private Integer id;
 
+	@NotBlank(message ="不能为空")
     private String roleName;
 
+	@NotBlank(message ="不能为空")
     private String roleSign;
 
     private String description;

@@ -69,6 +69,20 @@ public class ColumnInfo {
 		this.sortable = sortable;
 	}
 
-	
+	public static String exChange(String str){  
+	    StringBuffer sb = new StringBuffer();  
+	    if(str!=null){  
+	        for(int i=0;i<str.length();i++){  
+	            char c = str.charAt(i);  
+	            if(Character.isUpperCase(c)){  
+	                sb.append("_").append(Character.toLowerCase(c));  
+	            }else if(Character.isLowerCase(c)){  
+	                sb.append(c);   
+	            }  
+	        }  
+	    }  
+	      
+	    return sb.toString();  
+	}  
 
 }

@@ -1,13 +1,15 @@
 <%@ page language="java" pageEncoding="utf-8"%>
 <script type="text/javascript" src="app/sys/permission-list.js"></script>
+<p>权限是资源+操作的集合</p>
 <div class="table-responsive">
 <table class="table">
   <thead>
   <tr>
-  	<th class="table-checkbox" style="width:40px"><input class="group-checkable" type="checkbox" onclick="selectAll(this)"></th>
+  	<!-- <th class="table-checkbox" style="width:40px"><input class="group-checkable" type="checkbox" onclick="selectAll(this)"></th> -->
     <th>权限ID</th>
     <th>权限名称</th>
-    <th>权限标识</th>
+    <th>权限码</th>
+    <th>权限分类</th>
     <th>描述</th>
     <th>操作</th>
   </tr>
@@ -53,9 +55,17 @@
                         </div>
                     	 <div class="col-md-12">
                             <div class="form-group">
-                                <label class="control-label col-md-2">权限标识</label>
+                                <label class="control-label col-md-2">权限码</label>
                                 <div class="col-md-10">
                                     <input id="permissionSign" name="permissionSign" type="text" for="permissionSign" class="form-control" placeholder="标识..." />
+                                </div>
+                            </div>
+                        </div>
+                    	 <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">权限分类</label>
+                                <div class="col-md-10">
+                                    <input id="permissionCategory" name="permissionCategory" type="text" for="permissionCategory" class="form-control" placeholder="分类..." />
                                 </div>
                             </div>
                         </div>

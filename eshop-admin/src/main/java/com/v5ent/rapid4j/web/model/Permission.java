@@ -14,7 +14,17 @@ public class Permission implements Serializable{
 
     private String permissionSign;
 
-    private String description;
+    private String permissionCategory;
+    
+    public String getPermissionCategory() {
+		return permissionCategory;
+	}
+
+	public void setPermissionCategory(String permissionCategory) {
+		this.permissionCategory = permissionCategory;
+	}
+
+	private String description;
 
     public Integer getId() {
         return id;

@@ -8,11 +8,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import com.v5ent.rapid4j.core.datatable.DataTable;
 import com.v5ent.rapid4j.core.datatable.DataTableReturn;
 import com.v5ent.rapid4j.core.generic.GenericDao;
 import com.v5ent.rapid4j.core.generic.GenericServiceImpl;
+import com.v5ent.rapid4j.core.orm.paging.Page;
+import com.v5ent.rapid4j.web.dao.PermissionMapper;
 import com.v5ent.rapid4j.web.dao.RoleMapper;
 import com.v5ent.rapid4j.web.model.Role;
 import com.v5ent.rapid4j.web.service.RoleService;
@@ -30,6 +31,9 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, Integer> implement
 	
     @Resource
     private RoleMapper roleMapper;
+    
+    @Resource
+    private PermissionMapper permissionMapper;
 
     @Override
     public GenericDao<Role, Integer> getDao() {
@@ -41,22 +45,9 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, Integer> implement
         return roleMapper.selectRolesByUserId(userId);
     }
 
-	@Override
-	public DataTableReturn selectByDatatables(DataTable dt) {
-		DataTableReturn tableReturn = new DataTableReturn();
-		tableReturn.setDraw(dt.getDraw()+1);
-		LOGGER.debug(" 排序和模糊查询 ");
-		List<Role> list = this.roleMapper.selectBySearchInfo(dt);
-		tableReturn.setData(list);
-		tableReturn.setRecordsFiltered(list.size());
-		tableReturn.setRecordsTotal(list.size());
-
-		return tableReturn;
-	}
-
-	@Override
-	public List<Role> selectList() {
-		return roleMapper.selectList();
+    @Override
+	public List<Role> selectListAll() {
+		return roleMapper.selectListAll();
 	}
 
 	@Override
@@ -68,6 +59,25 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, Integer> implement
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public DataTableReturn selectByDatatables(DataTable dt) {
+		DataTableReturn tableReturn = new DataTableReturn();
+		tableReturn.setDraw(dt.getDraw()+1);
+		LOGGER.debug(" 排序和模糊查询 ");
+		Page<Role> page = new Page<Role>(dt.getStart()/dt.getLength()+1,dt.getLength());
+		List<Role> list = this.roleMapper.selectBySearchInfo(dt,page);
+		tableReturn.setData(list);
+		tableReturn.setRecordsFiltered(page.getTotalCount());
+		tableReturn.setRecordsTotal(page.getTotalCount());
+		return tableReturn;
+	}
+
+	@Override
+	public int delete(Integer id) {
+		permissionMapper.deleteRolePermissionsByRoleid(id);
+		return roleMapper.deleteByPrimaryKey(id);
 	}
 
 }

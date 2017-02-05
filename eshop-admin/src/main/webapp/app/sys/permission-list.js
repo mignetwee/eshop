@@ -30,10 +30,11 @@ function searchByCondition(page,rows,condition){
     $.each(data.datas,function(i,item){
       //遍历显示内容
       var tr = "<tr>";
-      tr += "<td><input class='checkboxes' type=\"checkbox\" name=\"checkbox\" value=\"+item.id+\"></td> ";
+      /*tr += "<td><input class='checkboxes' type=\"checkbox\" name=\"checkbox\" value=\"+item.id+\"></td> ";*/
       tr += "<td>"+ item.id + "</td>";
       tr += "<td>"+ item.permissionName + "</td>";
       tr += "<td>"+ item.permissionSign + "</td>";
+      tr += "<td>"+ item.permissionCategory + "</td>";
       tr += "<td>"+ item.description + "</td>";
       tr += getActionHtml(item.id);//通过脚本生成按钮
       tr += "</tr>";
@@ -47,7 +48,7 @@ function searchByCondition(page,rows,condition){
             bootstrapMajorVersion:3,
             currentPage:data.pageNo,
             numberOfPages:data.totalCount,
-            totalPages:data.totalPages,
+            totalPages:Math.ceil(data.totalCount/data.pageSize),
             onPageChanged:function(event,oldPage,newPage){
             	searchByCondition(newPage,data.pageSize,condition);//paging
             }
@@ -99,7 +100,7 @@ function BindEvent() {
             	method = "post";
             	_url_ = "/rest/permissions";
             }else{
-            	method = "put";
+            	method = "post";
             	_url_ = "/rest/permissions/"+$("#id").val();
             }
             $(form).ajaxSubmit({
@@ -129,6 +130,7 @@ function addInit(){
 	$("#myTitle").html("新增信息");
 	$("#id").val(-1);
 	$("#permissionSign").val("");
+	$("#permissionCategory").val("");
 	$("#permissionName").val("");
 	$("#permissionName").removeAttr("readonly");
 	$("#permissionName").rules('add',{
@@ -154,6 +156,7 @@ function updateInit(id){
 			$("#id").val(result.id);
 			$("#permissionName").val(result.permissionName);
 			$("#permissionSign").val(result.permissionSign);
+			$("#permissionCategory").val(result.permissionCategory);
 			$("#permissionName").attr("readonly","readonly");
 			$("#permissionName").rules("remove"); //修改时不需要验证
 			$("#description").val(result.description);

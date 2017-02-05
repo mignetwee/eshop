@@ -2,6 +2,7 @@ package com.v5ent.rapid4j.core.datatable;
 
 public class OrderInfo {
 	private int column;
+	private String name;//排序列名
 	private String dir;
 
 	public int getColumn() {
@@ -18,5 +19,13 @@ public class OrderInfo {
 
 	public void setDir(String dir) {
 		this.dir = dir;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

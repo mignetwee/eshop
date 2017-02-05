@@ -26,13 +26,14 @@ CREATE TABLE `tsys_permission` (
   `permission_name` varchar(32) DEFAULT NULL COMMENT '权限名',
   `permission_sign` varchar(128) DEFAULT NULL COMMENT '权限标识,程序中判断使用,如"user:create"',
   `description` varchar(256) DEFAULT NULL COMMENT '权限描述,UI界面显示使用',
+  `permission_category` varchar(128) DEFAULT NULL COMMENT '分类',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='权限表';
 
 -- ----------------------------
 -- Records of tsys_permission
 -- ----------------------------
-INSERT INTO `tsys_permission` VALUES ('1', '用户新增', 'user:create', '新增用户的权限');
+INSERT INTO `tsys_permission` VALUES ('1', '用户新增', 'user:create', '新增用户的权限','系统');
 
 -- ----------------------------
 -- Table structure for tsys_role

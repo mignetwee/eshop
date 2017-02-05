@@ -4,7 +4,7 @@ public class SearchInfo {
 	private String value;
 	private boolean regex;
 	public String getValue() {
-		return value;
+		return value.replace("'", "").replace("-", "");
 	}
 	public void setValue(String value) {
 		this.value = value;

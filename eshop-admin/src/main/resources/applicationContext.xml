@@ -24,14 +24,33 @@
     <context:component-scan base-package="com.v5ent.rapid4j"></context:component-scan>
 
     <!-- 引入配置文件 -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath*:application.properties</value>
-            </list>
-        </property>
-    </bean>
+    <bean  class="com.v5ent.rapid4j.xoss.helper.SpringPropertyPlaceholder" id="propertyConfigurer">
+		<property name="locations">
+			<list>
+                <value>classpath:config/*.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8" />
+	</bean>
 
+	<bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig" >
+			<property name="maxWaitMillis" value="-1" />
+			<property name="maxTotal" value="1000" />
+			<property name="minIdle" value="8" />
+			<property name="maxIdle" value="100" />
+	</bean>
+
+	<bean id="jedisCluster" class="com.v5ent.rapid4j.xoss.helper.JedisClusterFactoryHelper">
+		<property name="addressConfig">
+			<value>classpath:config/redis-cluster.properties</value>
+		</property>
+		<!--  属性文件里  key的前缀 -->
+		<property name="addressKeyPrefix" value="redisAddress" />   
+		<property name="timeout" value="300000" />
+		<property name="maxRedirections" value="6" />
+		<property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
+	</bean>
+	
     <!-- dataSource 配置 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <!-- 基本属性 url、user、password -->

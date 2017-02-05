@@ -1,13 +1,18 @@
 package com.v5ent.rapid4j.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -21,15 +26,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.collect.ImmutableMap;
+import com.v5ent.rapid4j.core.datatable.DataInfo;
+import com.v5ent.rapid4j.core.datatable.DataResult;
 import com.v5ent.rapid4j.core.datatable.DataTable;
 import com.v5ent.rapid4j.core.datatable.DataTableReturn;
-import com.v5ent.rapid4j.core.result.JQReturn;
+import com.v5ent.rapid4j.core.datatable.ErrorField;
+import com.v5ent.rapid4j.core.result.Result;
 import com.v5ent.rapid4j.core.util.JsonUtils;
 import com.v5ent.rapid4j.web.interceptors.DateConvertEditor;
+import com.v5ent.rapid4j.web.model.Permission;
 import com.v5ent.rapid4j.web.model.Role;
-import com.v5ent.rapid4j.web.rbac.PermissionSign;
-import com.v5ent.rapid4j.web.rbac.RoleSign;
+import com.v5ent.rapid4j.web.service.PermissionService;
 import com.v5ent.rapid4j.web.service.RoleService;
+import com.v5ent.rapid4j.xoss.logger.RequestLogging;
 
 /**
  * 角色控制器
@@ -39,12 +49,16 @@ import com.v5ent.rapid4j.web.service.RoleService;
  **/
 @Controller
 @RequestMapping(value = "/role")
+@RequestLogging("角色控制器")
 public class RoleController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleController.class);
 
     @Resource
     private RoleService roleService;
+    
+    @Resource
+    private PermissionService permissionService;
 
 	/**
 	 * 日期转换
@@ -61,16 +75,12 @@ public class RoleController {
      * 基于角色 比如拥有admin角色，才可以查看角色列表.
      */
     @RequestMapping(value="",   method=RequestMethod.GET)
-    @RequiresRoles(value = RoleSign.ADMIN)
     public String roles(Model model) {
-    	List<Role> roles = roleService.selectList();//empty
-    	LOGGER.debug("roleService.selectList() size:"+roles);
-    	model.addAttribute("roles",roles);
     	return "sys/role-list";
     }
 
     /**
-     * 翻页的例子<br>
+     * 翻页<br>
      * 针对前端组件获取后端的情形
      * @return
      */
@@ -79,50 +89,88 @@ public class RoleController {
 	public DataTableReturn getRoles(@RequestParam String  _dt_json) {
 		LOGGER.debug("role list _dt_json={}", _dt_json);
 		DataTable dataTable = JsonUtils.fromJsonToObject(_dt_json, DataTable.class);
+		dataTable.initOrders();
 		DataTableReturn tableReturn = roleService.selectByDatatables(dataTable);
 		return tableReturn;
 	}
 
-    /**
-     * 基于权限标识的权限控制
-     */
-    @RequestMapping(value = "/create")
-    @ResponseBody
-    @RequiresPermissions(value = PermissionSign.ROLE_CREATE)
-    public String create() {
-        return "拥有role:create权限,能访问";
-    }
-
-    @RequestMapping("/save")
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Object saveOrUpdate(Role role) {
-		if (StringUtils.isBlank(role.getRoleName())) {
-			return new JQReturn(false, "角色名称不能为空!");
-		}
-		try {
-			return this.roleService.update(role);
-		} catch (Exception e) {
-			LOGGER.error("Exception: ", e);
-			return new JQReturn(false, "系统繁忙，请稍候再试!");
-		}
-	}
-
-	@RequestMapping("/del/{id}")
-	@ResponseBody
-	public Object delete(@PathVariable Integer id) {
-		if (id == null) {
-			return new JQReturn(false, "主键不能为空!");
-		}
-		try {
-			if (this.roleService.delete(id) == 1) {
-				return new JQReturn(true, "删除成功!");
-			} else {
-				return new JQReturn(false, "删除失败!");
+	public Object save(@RequestParam String rows) {
+    	DataInfo df = JsonUtils.fromJsonToObject(rows, DataInfo.class); 
+    	@SuppressWarnings("unchecked")
+		Map<String,Role> map =  (Map<String, Role>) df.getData();
+    	DataResult dr = new DataResult();
+    	List<Role> datas = new ArrayList<Role>();
+    	List<ErrorField> errors = new ArrayList<ErrorField>();
+    	ValidatorFactory factory = Validation.buildDefaultValidatorFactory();    
+        Validator validator = factory.getValidator();    
+    	try {
+			if(DataInfo.ACTION_CREATE.equals(df.getAction())){
+				for (String key : map.keySet()) {
+					Role r = new Role();
+					BeanUtils.copyProperties(r, map.get(key));
+					datas.add(r);
+					Set<ConstraintViolation<Role>> constraintViolations = validator.validate(r);    
+			        for (ConstraintViolation<Role> constraintViolation : constraintViolations) {    
+			            errors.add(new ErrorField(constraintViolation.getPropertyPath().toString(),constraintViolation.getMessage()));
+			            dr.setFieldErrors(errors);
+			            return dr;
+			        }    
+					this.roleService.insert(r);
+				}
+			}
+			if(DataInfo.ACTION_EDIT.equals(df.getAction())){
+				for (String key : map.keySet()) {
+					Role r = new Role();
+					BeanUtils.copyProperties(r, map.get(key));
+					datas.add(r);
+					Set<ConstraintViolation<Role>> constraintViolations = validator.validate(r);    
+			        for (ConstraintViolation<Role> constraintViolation : constraintViolations) {    
+			            errors.add(new ErrorField(constraintViolation.getPropertyPath().toString(),constraintViolation.getMessage()));
+			            dr.setFieldErrors(errors);
+			            return dr;
+			        } 
+					this.roleService.update(r);
+				}
+			}
+			if(DataInfo.ACTION_REMOVE.equals(df.getAction())){
+				for (String key : map.keySet()) {
+					this.roleService.delete(Integer.parseInt(key));
+				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("Exception: ", e);
-			return new JQReturn(false, "系统繁忙，请稍候再试!");
+			dr.setError(e.getMessage());
 		}
+    	dr.setData(datas);
+    	return dr;
 	}
+    
+    /**
+     *  获取角色权限列表
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/{id}/permission", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, List<Permission>> getPermission(@PathVariable("id") String id) {
+    	List<Permission> permissions = permissionService.selectListAll();
+    	List<Permission> permissionList = permissionService.selectPermissionsByRoleId(Integer.parseInt(id));
+    	return ImmutableMap.of("permissions",permissions,"permissionList",permissionList);
+    }
+    
+    @RequestMapping(value = "/{id}/permission", method = RequestMethod.POST)
+    @ResponseBody
+    public Result updatePermissions(@PathVariable("id") String id,String permissions) {
+    	if(permissions==null){
+    		permissions = "";
+    	}
+    	boolean flag = permissionService.updateRolePermissions(id,permissions.split(","));
+    	if(flag){
+    		return new Result(true,"更新成功!");
+    	}else{
+    		return new Result(false,500,"更新失败");
+    	}
+    }
 
 }

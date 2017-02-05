@@ -21,6 +21,11 @@ public class PermissionSign {
      * 用户新增权限 标识
      */
     public static final String USER_CREATE = Resource.USER+OperationType.CREATE;
+    
+    /**
+	* 用户管理
+	*/
+	public static final String SYS_USER_CREATE = "sys-user:create";
 
     /**
      * 用户删除权限 标识

@@ -3,6 +3,10 @@ package com.v5ent.rapid4j.web.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class User implements Serializable{
     /**
 	 * 序列化
@@ -11,17 +15,21 @@ public class User implements Serializable{
 
 	private Integer id;
 
+	@NotNull
     private String username;
 
+	@NotNull
     private String password;
 
     private String state;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone="GMT+8")
     private Date createTime;
 
     private String description;
 
     public User(){
+    	
     }
     
     public User(String username, String password) {

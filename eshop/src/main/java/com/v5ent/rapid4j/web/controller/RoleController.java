@@ -1,5 +1,6 @@
 package com.v5ent.rapid4j.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import com.v5ent.rapid4j.core.result.JQReturn;
 import com.v5ent.rapid4j.core.util.JsonUtils;
 import com.v5ent.rapid4j.web.interceptors.DateConvertEditor;
 import com.v5ent.rapid4j.web.model.Role;
-import com.v5ent.rapid4j.web.rbac.PermissionSign;
 import com.v5ent.rapid4j.web.rbac.RoleSign;
 import com.v5ent.rapid4j.web.service.RoleService;
 
@@ -63,7 +63,7 @@ public class RoleController {
     @RequestMapping(value="",   method=RequestMethod.GET)
     @RequiresRoles(value = RoleSign.ADMIN)
     public String roles(Model model) {
-    	List<Role> roles = roleService.selectList();//empty
+    	List<Role> roles = new ArrayList<Role>();//empty
     	LOGGER.debug("roleService.selectList() size:"+roles);
     	model.addAttribute("roles",roles);
     	return "sys/role-list";
@@ -88,7 +88,6 @@ public class RoleController {
      */
     @RequestMapping(value = "/create")
     @ResponseBody
-    @RequiresPermissions(value = PermissionSign.ROLE_CREATE)
     public String create() {
         return "拥有role:create权限,能访问";
     }

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.v5ent.rapid4j.core.generic.GenericDao;
 import com.v5ent.rapid4j.core.generic.GenericServiceImpl;
+import com.v5ent.rapid4j.web.dao.RoleMapper;
 import com.v5ent.rapid4j.web.dao.UserMapper;
 import com.v5ent.rapid4j.web.model.User;
 import com.v5ent.rapid4j.web.service.UserService;
+
 
 /**
  * 用户Service实现类
@@ -24,6 +26,8 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private RoleMapper roleMapper;
 
     @Override
     public int insert(User model) {
@@ -37,6 +41,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
     @Override
     public int delete(Integer id) {
+    	roleMapper.deleteUserRolesByUserid(id);
         return userMapper.deleteByPrimaryKey(id);
     }
 

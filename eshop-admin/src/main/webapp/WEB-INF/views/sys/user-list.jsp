@@ -1,13 +1,13 @@
 <%@ page language="java" pageEncoding="utf-8"%>
+<link rel="stylesheet" type="text/css" href="assets/plugins/data-tables/extensions/Buttons/css/buttons.dataTables.min.css"  />
  <script type="text/javascript" src="app/sys/user-list.js"></script>
-<p>Example of CRUD with Twitter Bootstrap</p>
 <form id="ffSearch">
    <div class="row" >
 		<div class="col-md-6 col-sm-6 col-xs-6">
 				<div class="form-group">
 				<!-- Button trigger modal -->
-				<button class="btn btn-primary" data-toggle="modal" 
-				   data-target="#userModal" onclick="addInit()"> 新增
+				<button class="btn btn-primary" data-toggle="modal" type="button" 
+				   data-target="#userModal" onclick="addInit()"> <i class='fa fa-edit'></i>新增
 				</button>
 				</div>
 		</div>
@@ -18,7 +18,7 @@
 					<input name="username" type="text" class="form-control">
 				</div>
 				<div class="col-md-6">
-					<button type="submit" class="btn btn-primary" onclick="search(1,5);return false;">查询</button>
+					<button type="submit" type="button" class="btn btn-primary" onclick="search(1,5);return false;">查询</button>
 			         <button type="reset" class="btn btn-primary" >重置</button>
 				</div>
 			</div>
@@ -26,10 +26,10 @@
 </div>
 </form>
 <div class="table-responsive">
-<table class="table">
+<table class="table table-bordered">
 <thead>
   <tr>
-  	<th class="table-checkbox" style="width:40px"><input class="group-checkable" type="checkbox" onclick="selectAll(this)"></th>
+  	<!-- <th class="table-checkbox" style="width:40px"><input class="group-checkable" type="checkbox" onclick="selectAll(this)"></th> -->
     <th>用户ID</th>
     <th>用户名</th>
     <th>状态</th>

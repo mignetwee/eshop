@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.common.collect.ImmutableMap;
 import com.v5ent.rapid4j.core.orm.paging.Page;
 import com.v5ent.rapid4j.core.result.Result;
+import com.v5ent.rapid4j.core.security.SHA256;
 import com.v5ent.rapid4j.web.model.Role;
 import com.v5ent.rapid4j.web.model.User;
 import com.v5ent.rapid4j.web.rbac.PermissionSign;
-import com.v5ent.rapid4j.web.rbac.RoleSign;
 import com.v5ent.rapid4j.web.service.RoleService;
 import com.v5ent.rapid4j.web.service.UserService;
+import com.v5ent.rapid4j.xoss.logger.RequestLogging;
 
 /**
  * 用户控制器
@@ -37,6 +37,7 @@ import com.v5ent.rapid4j.web.service.UserService;
  **/
 @Controller
 @RequestMapping(value = "/user")
+@RequestLogging("用户控制器")
 public class UserController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -46,23 +47,62 @@ public class UserController {
     @Resource
     private RoleService roleService;
 
-    /**
-     * 基于角色 标识的权限控制案例
-     */
-    @RequestMapping(value = "/admin")
-    @ResponseBody
-    @RequiresRoles(value = RoleSign.ADMIN)
-    public String admin() {
-        return "拥有admin角色,能访问";
-    }
 
     /**
-     * 基于角色 比如拥有admin角色，才可以查看用户列表
+     * 查看用户列表
      */
     @RequestMapping(value="",   method=RequestMethod.GET)  
-    @RequiresRoles(value = RoleSign.ADMIN)
     public String users(Model model) {
     	return "sys/user-list";
+    }
+    
+    //test
+    @RequestMapping(value="/test/page",   method=RequestMethod.GET)  
+    public String test() {
+    	return "sys/test";
+    }
+    
+    /**
+     * 用户密码
+     */
+    @RequestMapping(value="/toresetpwd",   method=RequestMethod.GET)  
+    public String toresetPwd(Model model) {
+    	return "sys/reset-pwd";
+    }
+    
+    /**
+     * 用户密码重置
+     */
+    @RequestMapping(value="/{id}/resetpwd",   method=RequestMethod.POST)  
+    @ResponseBody
+    @RequestLogging("用户密码重置")
+    public Result resetDefaultPwd(@PathVariable("id")String id) {
+    	User u = userService.selectById(Integer.valueOf(id));
+    	u.setPassword(SHA256.crypt(u.getUsername()+"@123456"));
+    	int i = userService.update(u);
+    	if(i==1){
+    		return new Result(true,"密码重置成功!");
+    	}else{
+    		return new Result(false,500,"密码重置失败");
+    	}
+    }
+    
+    /**
+     * 用户修改密码
+     */
+    @RequestMapping(value="/resetpwd",   method=RequestMethod.POST)  
+    @ResponseBody
+    @RequestLogging("用户修改密码")
+    public Result resetPwd(@RequestParam("new_password")String new_password) {
+    	Subject currentUser = SecurityUtils.getSubject();
+    	User u = userService.selectByUsername(currentUser.getPrincipal().toString());
+    	u.setPassword(new_password);
+    	int i = userService.update(u);
+    	if(i==1){
+    		return new Result(true,"密码修改成功!");
+    	}else{
+    		return new Result(false,500,"密码修改失败");
+    	}
     }
     
     @RequestMapping(value="/list",   method=RequestMethod.GET)  
@@ -77,17 +117,17 @@ public class UserController {
 
     /**
      * 基于权限标识的权限控制案例<br>
-     * <如果>这里使用PUT请求并且路径是/{id}<才是>Restful的
+     * 如果这里使用PUT请求并且路径是/{id}，才是Restful的
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions(value = PermissionSign.USER_CREATE)
+    @RequiresPermissions(value = PermissionSign.SYS_USER_CREATE)
+    @RequestLogging("用户新增更新")
     public Result create(User item) {
     	if(item.getId()==0){
     		item.setId(null);
 	    	item.setCreateTime(new Date());
-	    	//加入我们使用时间变量CreateTime作为salt
-	    	item.setPassword("8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92");
+	    	item.setPassword(SHA256.crypt(item.getUsername()+"@123456"));
 	    	int i = userService.insert(item);
 	    	if(i==1){
 	    		return new Result(true,"新增用户成功!");
@@ -111,7 +151,7 @@ public class UserController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions(value = PermissionSign.USER_CREATE)
+    @RequiresPermissions(value = PermissionSign.SYS_USER_CREATE)
     public Result update(User item) {
     	int i = userService.update(item);
     	if(i==1){
@@ -128,7 +168,7 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    @RequiresPermissions(value = PermissionSign.USER_CREATE)
+    @RequiresPermissions(value = PermissionSign.SYS_USER_CREATE)
     public Result delete(@PathVariable("id") String id) {
     	User u  =userService.selectById(Integer.valueOf(id));
     	Subject currentUser = SecurityUtils.getSubject();
@@ -150,18 +190,18 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}/role", method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions(value = PermissionSign.USER_CREATE)
-    public ImmutableMap<String, List<Role>> setRoles(@PathVariable("id") String id) {
-    	List<Role> roles = roleService.selectList();
+    @RequiresPermissions(value = PermissionSign.SYS_USER_CREATE)
+    public ImmutableMap<String, List<Role>> getRoles(@PathVariable("id") String id) {
+    	List<Role> roles = roleService.selectListAll();
     	List<Role> roleList = roleService.selectRolesByUserId(Integer.parseInt(id));
     	return ImmutableMap.of("roles",roles,"roleList",roleList);
     }
     
     @RequestMapping(value = "/{id}/role", method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions(value = PermissionSign.USER_CREATE)
+    @RequiresPermissions(value = PermissionSign.SYS_USER_CREATE)
     public Result updateRoles(@PathVariable("id") String id,String roles) {
-    	if(roles==null)return new Result(false,404,"更新失败!");
+    	if(roles==null)return new Result(false,404,"当前不允许去掉所有角色!");
     	boolean flag = roleService.updateUserRoles(id,roles.split(","));
     	if(flag){
     		return new Result(true,"更新成功!");

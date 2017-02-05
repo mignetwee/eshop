@@ -60,12 +60,12 @@ public abstract class GenericServiceImpl<Model, PK> implements GenericService<Mo
 
 
     @Override
-    public Model selectOne() {
-        return null;
+    public Model selectOne(Model t) {
+        return getDao().selectOneByCondition(t);
     }
 
     @Override
-    public List<Model> selectList() {
-        return null;
+    public List<Model> selectListByCondition(Model t) {
+        return getDao().selectByCondition(t);
     }
 }

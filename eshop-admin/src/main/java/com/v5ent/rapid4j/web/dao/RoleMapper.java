@@ -3,10 +3,12 @@ package com.v5ent.rapid4j.web.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import com.v5ent.rapid4j.core.datatable.DataTable;
 import com.v5ent.rapid4j.core.generic.GenericDao;
 import com.v5ent.rapid4j.web.model.Role;
+
 
 public interface RoleMapper extends GenericDao<Role, Integer>{
     int deleteByPrimaryKey(Integer id);
@@ -35,15 +37,15 @@ public interface RoleMapper extends GenericDao<Role, Integer>{
      * @param page
      * @return
      */
-	List<Role> selectBySearchInfo(@Param("dt")DataTable dt);
+	List<Role> selectBySearchInfo(@Param("dt")DataTable dt,RowBounds page);
 
 	/**
 	 * 获取所有角色
 	 * @return
 	 */
-	List<Role> selectList();
+	List<Role> selectListAll();
 
-	void deleteUserRolesByUserid(Integer userId);
+	void deleteUserRolesByUserid(@Param("userId")Integer userId);
 
 	void insertUserRole(@Param("userId")int userId, @Param("roleId")int roleId);
 

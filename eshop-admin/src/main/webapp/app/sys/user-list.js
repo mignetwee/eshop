@@ -44,6 +44,27 @@ function updateInit(id){
 	  }
 	});
 }
+//恢复原始密码
+function resetPwd(id) {
+	$.ajax({
+		url : 'rest/user/'+id+'/resetpwd',
+		type:'json',
+		type : 'POST',
+		success : function(result) {
+			 if (result.success) {
+                 //保存成功  1.关闭弹出层，2.刷新表格数据
+                 showTips(result.message);
+             }else {
+                 showError(result.message);
+             }
+		},
+	 //async :false,
+	  error:function(XmlHttpRequest,textStatus, errorThrown)
+	  {
+		  showError(XmlHttpRequest.responseText);
+	  }
+	});
+}
 //删除
 function del(id) {
 	$.ajax({
@@ -80,9 +101,9 @@ function setRoles(id){
 			 for(var i=0;i<roles.length;i++){
 				 var role = roles[i];
 				 if(inArray(role,roleList,'id')){
-					 checks +=  '<label><input name="ck" type="checkbox" value="'+role.id+'"  checked="checked"/>'+role.roleName+'['+role.description+']'+'</label>'
+					 checks +=  '<div><input name="ck" type="checkbox" value="'+role.id+'"  checked="checked"/>'+role.roleName+'['+role.description+']'+'</div>'
 				 }else{
-					 checks +=  '<label><input name="ck" type="checkbox" value="'+role.id+'" />'+role.roleName+'['+role.description+']'+'</label>'
+					 checks +=  '<div><input name="ck" type="checkbox" value="'+role.id+'" />'+role.roleName+'['+role.description+']'+'</div>'
 				 }
 			 }
 			 $('#roles-div').append(checks);
@@ -151,7 +172,7 @@ function searchByCondition(page,rows,condition){
     $.each(result.datas,function(i,item){
       //遍历显示内容
       var tr = "<tr>";
-      tr += "<td><input class='checkboxes' type=\"checkbox\" name=\"checkbox\" value=\"+item.id+\"></td> ";
+     /* tr += "<td><input class='checkboxes' type=\"checkbox\" name=\"checkbox\" value=\"+item.id+\"></td> ";*/
       tr += "<td>"+ item.id + "</td>";
       tr += "<td>"+ item.username + "</td>";
       if(item.state=='Y'){
@@ -159,7 +180,7 @@ function searchByCondition(page,rows,condition){
       }else{
         tr += "<td><span class='label label-danger'>无效</span></td>";
       }
-      tr += "<td>"+ new Date(item.createTime).Format("yyyy-MM-dd hh:mm:ss") + "</td>";
+      tr += "<td>"+ item.createTime + "</td>";
       tr += "<td>"+ item.description + "</td>";
       tr += getActionHtml(item.id);//通过脚本生成按钮列
       tr += "</tr>";
@@ -173,7 +194,7 @@ function searchByCondition(page,rows,condition){
             bootstrapMajorVersion:3,
             currentPage:result.pageNo,
             numberOfPages:result.totalCount,
-            totalPages:result.totalPages,
+            totalPages:Math.ceil(result.totalCount/result.pageSize),
             onPageChanged:function(event,oldPage,newPage){
             	searchByCondition(newPage,result.pageSize,condition);//paging
             }
@@ -190,6 +211,8 @@ function getActionHtml(id){
 	td += "<button  class=\"btn btn-primary\" type=\"button\"  data-toggle=\"modal\"  data-target=\"#userModal\" onclick=\"updateInit("+id+")\">编辑</button>";
 	td += "&nbsp;"
 	td += "<button  class=\"btn btn-primary\" type=\"button\" onclick=\"del("+id+")\">删除</button>";
+	td += "&nbsp;"
+	td += "<button  class=\"btn btn-primary\" type=\"button\" onclick=\"resetPwd("+id+")\">重置为原始密码</button>";
 	td += "&nbsp;"
 	td += "<button  class=\"btn btn-primary\" type=\"button\"  data-toggle=\"modal\"  data-target=\"#roleModal\" onclick=\"setRoles("+id+")\">分配角色</button>";
 	td += "</td>";

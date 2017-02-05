@@ -29,6 +29,66 @@ public class DataTable {
 	private List<OrderInfo> order;
 	private SearchInfo search;
 	
+	/**
+	 * Order by Column[index].data 
+	 */
+	public void initOrders(){
+		if(null != order){		
+			for(OrderInfo o:order){
+				o.setName(convertColumn(columns.get(o.getColumn()).getData()));
+			}
+		}
+	}
+	/**
+	 * Order by Column[index].data 
+	 */
+	public void initFOrders(){
+		if(null != order){			
+			for(OrderInfo o:order){
+				o.setName("f_"+convertColumn(columns.get(o.getColumn()).getData()));
+			}
+		}
+	}
+	
+	/**
+	 * Order by Column[index].data 
+	 * 拼接列名无前缀:f_
+	 */
+	public void initFOrdersNoPrefix(){
+		for(OrderInfo o:order){
+			o.setName(convertColumn(columns.get(o.getColumn()).getData()));
+		}
+	}
+	
+	/**
+	 * Order by Column[index].data 
+	 * 原始排序  不需要转化
+	 */
+	public void initOrdersOriginal(){
+		if(null != order){		
+			for(OrderInfo o:order){
+				o.setName(columns.get(o.getColumn()).getData());
+			}
+		}
+	}
+	
+	/**
+	 * 将字符串中大写字母转换成下划线小写，比如roleName->role_name
+	 * @param str
+	 * @return string
+	 */
+	private String convertColumn(String str) {
+		StringBuilder sb = new StringBuilder();
+		for (char c:str.toCharArray()) {
+			if (Character.isUpperCase(c)) {
+				sb.append('_').append(Character.toLowerCase(c));
+			}else{
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+	
 	public List<ColumnInfo> getColumns() {
 		return columns;
 	}

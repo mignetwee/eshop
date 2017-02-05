@@ -48,14 +48,14 @@ public interface GenericService<Model, PK> {
      *
      * @return 对象
      */
-    Model selectOne();
-
+    Model selectOne(Model t);
 
     /**
      * 查询多个对象
      *
      * @return 对象集合
      */
-    List<Model> selectList();
+    List<Model> selectListByCondition(Model t);
+
 
 }

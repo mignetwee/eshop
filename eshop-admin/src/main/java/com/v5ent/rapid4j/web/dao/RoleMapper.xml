@@ -16,7 +16,7 @@
     from tsys_role
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectListAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from tsys_role
@@ -105,8 +105,13 @@
 		        or
 		        description like CONCAT('%','${dt.search.value}','%' )  
          </if>  
+         <if test="dt.order!=null">  
+               <foreach collection="dt.order" index="index" item="item"
+                    open="order by" separator="," close=" ">
+                    ${item.name} ${item.dir}
+                </foreach>
+         </if>  
         </where>
-        limit ${dt.length} offset ${dt.start}
     </select>
     <!-- 删除用户的角色 -->
      <delete id="deleteUserRolesByUserid" parameterType="java.lang.Integer" >
@@ -114,7 +119,7 @@
 	    where user_id = #{userId,jdbcType=INTEGER}
 	  </delete>
 	  <!-- 插入用户的角色 -->
-	    <insert id="insertUserRole"  >
-	    INSERT INTO tsys_user_role ("user_id", "role_id") VALUES  (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR})
+	  <insert id="insertUserRole"  >
+	    INSERT INTO tsys_user_role (user_id, role_id) VALUES  (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR})
 	  </insert>
 </mapper>
