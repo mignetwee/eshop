@@ -297,11 +297,11 @@
 	<script src="js/mui.min.js"></script>
 	<script>
 		mui.init({
-			swipeBack:true //启用右滑关闭功能
+			swipeBack:false //关闭右滑关闭功能
 		});
-		console.log(document.body.scrollHeight);
-		console.log(document.getElementById("slider").offsetHeight);
-		console.log(document.getElementById("nav-div").offsetHeight);
+		//console.log(document.body.scrollHeight);
+		//console.log(document.getElementById("slider").offsetHeight);
+		//console.log(document.getElementById("nav-div").offsetHeight);
 		var h = Math.round((document.body.scrollHeight - document.getElementById("slider").offsetHeight - document.getElementById("nav-div").offsetHeight)/2);
 		var slider = mui("#slider");
 			slider.slider({
