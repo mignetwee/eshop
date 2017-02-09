@@ -33,9 +33,9 @@
     </bean>
 
     <!-- 默认的缓存管理器 -->
-    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+  	<!-- <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
-    </bean>
+    </bean> -->
     <!-- 自定义redis缓存管理器 -->  
     <!-- <bean id="redisCacheManager" class="com.v5ent.rapid4j.core.session.RedisCacheManager">  
         <property name="redisManager" ref="redisManager" />  
@@ -81,7 +81,7 @@
             </list>
         </property>
         <!-- cacheManager,集合spring缓存工厂 -->
-        <property name="cacheManager" ref="shiroEhcacheManager" />
+        <!-- <property name="cacheManager" ref="shiroEhcacheManager" /> -->
         <!-- 重写缓存，让集群共享 -->
         <!-- <property name="cacheManager" ref="redisCacheManager" /> -->
         <property name="sessionManager" ref="sessionManager" />
