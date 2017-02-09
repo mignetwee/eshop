@@ -15,11 +15,11 @@
 			<div id="sportswear" class="panel-collapse collapse">
 				<div class="panel-body">
 					<ul>
-						<li><a href="#">Nike </a></li>
-						<li><a href="#">Under Armour </a></li>
-						<li><a href="#">Adidas </a></li>
-						<li><a href="#">Puma</a></li>
-						<li><a href="#">ASICS </a></li>
+						<li><a href="">耐克 Nike </a></li>
+						<li><a href="">安德玛 Under Armour </a></li>
+						<li><a href="">阿迪达斯 Adidas </a></li>
+						<li><a href="">彪马 Puma</a></li>
+						<li><a href="">亚瑟士 ASICS </a></li>
 					</ul>
 				</div>
 			</div>
