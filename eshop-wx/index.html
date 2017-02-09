@@ -302,16 +302,16 @@
 		//console.log(document.body.scrollHeight);
 		//console.log(document.getElementById("slider").offsetHeight);
 		//console.log(document.getElementById("nav-div").offsetHeight);
-		var h = Math.round((document.body.scrollHeight - document.getElementById("slider").offsetHeight - document.getElementById("nav-div").offsetHeight)/2);
 		var slider = mui("#slider");
 			slider.slider({
 				interval: 2000
 			});
+		/* var h = Math.round((document.body.scrollHeight - document.getElementById("slider").offsetHeight - document.getElementById("nav-div").offsetHeight)/2);
 		var luckElements = document.getElementsByName("ex-div");
         for(var i=0;i<luckElements.length;i++){  
             luckElements[i].style.display = "inline-block";  
             luckElements[i].style.width = "49%";  
             luckElements[i].style.height = h+"px";  
-        }  
+        }  */ 
 	</script>
 </html>
