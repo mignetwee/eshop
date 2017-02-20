@@ -202,7 +202,7 @@ public class PhpAssHash {
   
   public static void main(String[] args) {
 	  PhpAssHash hasher  = new PhpAssHash();
-	  String password = "7b3ae8e80b4e44fcecc2248de110c760";
+	  String password = "c441245ac4c0d007e3f0088f9fad5a68";
 	    String hash = hasher.createHash(password);
 	    System.out.println(hash);
 	    System.out.println(hasher.isMatch(password, "$2a$08$U48e0GLhqd4QXKTuQYVJ6eqIWPgUeo1KYr190VOw7YBW6.KR3Hw1W"));//true
